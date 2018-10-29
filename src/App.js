@@ -1,26 +1,53 @@
 import React, { Component } from 'react';
 import './App.css';
-import UserOutput from './Assignment 1/UserOutput';
-import UserInput from './Assignment 1/UserInput';
+import Validation from './Assignment 2/Validation';
+import CharComponent from './Assignment 2/CharComponent';
 
 class App extends Component {
-  state = {
-    username: "Ophelia"
+    state = {
+      text: "",
+      textLength: 0
+    }
+
+  inputLengthHandler = (e) => {
+    this.setState({
+      text: e.target.value,
+      textLength: e.target.value.length
+    });
   }
 
-  switchNameHandler = (e) => {
+  deleteCharHandler = (i) => {
+    const charArr = this.state.text.split('');
+    charArr.splice(i, 1);
+    const newText = charArr.join('');
     this.setState({
-      username: e.target.value
+      text: newText,
+      textLength: newText.length
     });
   }
 
   render() {
+    const charArr = this.state.text.split('');
+    const charList = charArr.map((char, index) => {
+      return (
+        <CharComponent
+          click={this.deleteCharHandler.bind(this, index)}
+          text={char}
+          key={"chrcmp_" + index}
+        />
+      )
+    });
+
     return (
       <div className="App">
-        <UserInput name={this.state.username} changed={this.switchNameHandler}/>
-        <UserOutput username={this.state.username} />
-        <UserOutput username="Max" />
-        <UserOutput username="Frederik" />
+        <input
+          value={this.state.text}
+          onChange={this.inputLengthHandler}
+          type="text"
+        />
+        <p>{this.state.textLength}</p>
+        <Validation textLength={this.state.textLength}/>
+        {charList}
       </div>
     );
   }
