@@ -1,56 +1,25 @@
-import React, { Component } from 'react';
-import './App.css';
-import Validation from './Assignment 2/Validation';
-import CharComponent from './Assignment 2/CharComponent';
+import React from 'react';
+import Layout from './components/Layout/Layout';
+import BurgerBuilder from './containers/BurgerBuilder';
+import Checkout from './containers/Checkout';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import Orders from './containers/Orders/Orders';
 
-class App extends Component {
-    state = {
-      text: "",
-      textLength: 0
-    }
+global.BASEURL = "https://burger-server-3e616.firebaseio.com/"
 
-  inputLengthHandler = (e) => {
-    this.setState({
-      text: e.target.value,
-      textLength: e.target.value.length
-    });
-  }
-
-  deleteCharHandler = (i) => {
-    const charArr = this.state.text.split('');
-    charArr.splice(i, 1);
-    const newText = charArr.join('');
-    this.setState({
-      text: newText,
-      textLength: newText.length
-    });
-  }
-
-  render() {
-    const charArr = this.state.text.split('');
-    const charList = charArr.map((char, index) => {
-      return (
-        <CharComponent
-          click={this.deleteCharHandler.bind(this, index)}
-          text={char}
-          key={"chrcmp_" + index}
-        />
-      )
-    });
-
-    return (
-      <div className="App">
-        <input
-          value={this.state.text}
-          onChange={this.inputLengthHandler}
-          type="text"
-        />
-        <p>{this.state.textLength}</p>
-        <Validation textLength={this.state.textLength}/>
-        {charList}
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <BrowserRouter>
+      <Layout>
+          <Switch>
+            <Route path="/Builder" component={BurgerBuilder} />
+            <Redirect from="/" exact to="/Builder" />
+            <Route path="/Orders" component={Orders} />
+            <Route path="/Checkout" component={Checkout} />
+          </Switch>
+      </Layout>
+    </BrowserRouter>
+  </div>
+)
 
 export default App;
