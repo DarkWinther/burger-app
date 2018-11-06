@@ -46,10 +46,10 @@
   padding-left: 0;
 }
 
-.Success {
+.Button.Success {
   color: #5C9210;
 }
 
-.Danger {
+.Button.Danger {
   color: #944317;
 }

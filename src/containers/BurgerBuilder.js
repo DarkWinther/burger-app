@@ -25,7 +25,7 @@ class BurgerBuilder extends React.Component {
 
   componentDidMount() {
     const xhttp = new XMLHttpRequest();
-    const URL = "https://burger-server-3e616.firebaseio.com/ingredients.json"
+    const URL = global.BASEURL + "ingredients.json"
     xhttp.onreadystatechange  = () => {
       if (xhttp.readyState === 4 && xhttp.status === 200) {
         this.setState({
@@ -67,46 +67,16 @@ class BurgerBuilder extends React.Component {
   }
 
   purchaseContinueHandler = () => {
-    // alert("You continue to checkout! (Not implemented)");
-    this.setState({
-      loading: true
+    const ingredientQuery = [];
+    for (let i in this.state.ingredients) {
+      ingredientQuery.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
+    }
+    ingredientQuery.push("price=" + this.state.price);
+    const queryStr = ingredientQuery.join("&");
+    this.props.history.push({
+      pathname: "/Checkout",
+      search: "?" + queryStr
     });
-
-    const URL = "https://burger-server-3e616.firebaseio.com/orders.json";
-    const xhttp = new XMLHttpRequest();
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.price,
-      customer: {
-        name: 'N Armstrong',
-        address: {
-          street: 'StreetStreet 1',
-          zipcode: '1234',
-          county: 'Lalaland'
-        },
-        email: 'Testmail@test.com'
-      },
-      deliveryMethod: 'fastest'
-    }
-
-    xhttp.onreadystatechange  = () => {
-      if (xhttp.readyState === 4 && xhttp.status === 200) {
-        this.setState({
-          loading: false,
-          ordered: false,
-          err: null
-        });
-      }
-      else {
-        this.setState({
-          loading: false,
-          ordered: false,
-          err: "Error " + xhttp.status + ": " + xhttp.response
-        });
-      }
-    }
-    xhttp.open("POST", URL, true);
-    xhttp.send(JSON.stringify(order));
   }
 
   clearErrorHandler = () => {
@@ -150,7 +120,8 @@ class BurgerBuilder extends React.Component {
 
     let modalInternal = <Spinner />;
     if (!this.state.loading && this.state.ingredients) {
-      modalInternal = <Summary
+      modalInternal =
+      <Summary
         ingredients={this.state.ingredients}
         cancel={this.purchaseCancelHandler}
         continue={this.purchaseContinueHandler}
@@ -162,14 +133,14 @@ class BurgerBuilder extends React.Component {
     if (this.state.ingredients) {
       burger =
       <>
-        <Burger ingredients={this.state.ingredients}/>
-          <BuildControls
-            more={this.addIngredientHandler}
-            less={this.removeIngredientHandler}
-            price={this.state.price}
-            disabled={buttonInfo}
-            purchasable={this.state.purchasable}
-            order={this.purchaseHandler}
+        <Burger ingredients={this.state.ingredients} />
+        <BuildControls
+          more={this.addIngredientHandler}
+          less={this.removeIngredientHandler}
+          price={this.state.price}
+          disabled={buttonInfo}
+          purchasable={this.state.purchasable}
+          order={this.purchaseHandler}
         />
       </>;
     }

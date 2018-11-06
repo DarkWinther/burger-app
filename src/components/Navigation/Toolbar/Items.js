@@ -1,19 +1,20 @@
 import React from 'react';
 import './Toolbar.css';
+import { NavLink } from 'react-router-dom';
 
 const Items = () => (
     <ul className="AllItems">
-      <Item link="/#">Burger Builder</Item>
-      <Item link="/#">Checkout</Item>
+      <Item link="/Builder" exact>Burger Builder</Item>
+      <Item link="/Orders">Orders</Item>
     </ul>
 )
 
 export const Item = (props) => (
   <li className="Item">
-    <a
-      href={props.link}
-      className={props.active ? "active" : null}
-    >{props.children}</a>
+    <NavLink
+      to={props.link}
+      exact={props.exact}
+    >{props.children}</NavLink>
   </li>
 )
 
