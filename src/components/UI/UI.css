@@ -53,3 +53,8 @@
 .Button.Danger {
   color: #944317;
 }
+
+.Button:disabled {
+  color: #CCC;
+  cursor: not-allowed;
+}
